@@ -8,8 +8,8 @@ Aby odpalić projek należy przywrócić paczki NuGetowe, można to zrobić albo
 Instrukcja instalacji:
 ```
 git clone https://github.com/lucky125111/TriangleRecognition.git
-
-TriangleRecognition\build.bat
+cd TriangleRecognition
+build.bat
 ```
 
 Sposób wykrywania kształtów:
