@@ -2,7 +2,7 @@ Solucja składa sie z dwóch projektów:
 GUI - aplikacja okienkowa w WinForms
 ImageProcessing - biblioteki gdzie jest algorytm do wykrywania trójkątów.
 
-Aby odpalić projek należy przywrócić paczki NuGetowe, można to zrobić albo w Visual Studio albo poprzez skrypt build.bat (UWAGA aby skrypt działał należy dodać nuget.exe oraz msbuild.exe do zmiennej PATH użytkownika).
+Aby odpalić projek należy przywrócić paczki NuGetowe, można to zrobić albo w Visual Studio albo poprzez skrypt build.bat (UWAGA aby skrypt działał należy dodać nuget.exe oraz devenv.exe do zmiennej PATH użytkownika).
 
 Sposób wykrywania kształtów:
 1. Obraz jest progowany względem koloru dla którego szukamy kształtów
