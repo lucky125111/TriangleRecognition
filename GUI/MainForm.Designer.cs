@@ -190,7 +190,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Gui";
             this.Text = "TriangleFinder";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Image_PictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ChoosenColor_PictureBox)).EndInit();
             this.Buttons_Panel.ResumeLayout(false);

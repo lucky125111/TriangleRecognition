@@ -10,11 +10,12 @@ namespace GUI
 {
     public partial class Gui : Form
     {
+        private const string OpenFileFilter = @"images |*.bmp; *.jpeg; *.png";
+        private const string SaveFileFilter = @"All (*.*)|*.*";
+
         public Gui()
         {
             InitializeComponent();
-            Threshold_UpDown.Maximum = 765;
-            Threshold_UpDown.Minimum = 0;
             Triangles_UpDown.Minimum = 1;
         }
 
@@ -22,13 +23,23 @@ namespace GUI
         private PointScaler PointScaler { get; set; }
         private Bitmap SourceImage { get; set; }
 
-        private void Form1_Load(object sender, EventArgs e)
+        /// <summary>
+        ///     Metoda do ustawiania niepewnosci wartosci kolorow
+        /// </summary>
+        private void Set_Threshold_UpDown()
+        {
+            Threshold_UpDown.Maximum = 100;
+            Threshold_UpDown.Minimum = 0;
+            Threshold_UpDown.Enabled = false;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
         {
             SourceImage = Resources.test_image;
             PointScaler = new PointScaler(Image_PictureBox.Image.Size, Image_PictureBox.Size);
-            OpenFile_Dialog.Filter = @"images |*.bmp; *.jpeg; *.png";
-            SaveFile_Dialog.Filter = @"All (*.*)|*.*";
-            Threshold_UpDown.Enabled = false;
+            OpenFile_Dialog.Filter = OpenFileFilter;
+            SaveFile_Dialog.Filter = SaveFileFilter;
+            Set_Threshold_UpDown();
         }
 
         private void ColorPick_Button_Click(object sender, EventArgs e)
@@ -46,18 +57,25 @@ namespace GUI
 
         private void Start_Button_Click(object sender, EventArgs e)
         {
-            this.Enabled = false;
-            var img = new Image<Rgb, byte>((Bitmap)Image_PictureBox.Image);
+            Enabled = false;
+            using (var img = new Image<Rgb, byte>((Bitmap)Image_PictureBox.Image))
+            {
+                Image_PictureBox.Image = DrawCircles(img);
+            }
 
-            DrawCircles(img);
-            this.Enabled = true;
+            Enabled = true;
         }
-        
-        private void DrawCircles(Image<Rgb, byte> img)
+
+        private Bitmap DrawCircles(Image<Rgb, byte> img)
         {
-            
-            Calculator = new Calculator(ChoosenColor_PictureBox.BackColor, img, Convert.ToInt32(Threshold_UpDown.Value),
-                Convert.ToInt32(Triangles_UpDown.Value));
+            var settings = new CalculatorSettings()
+            {
+                Color = ChoosenColor_PictureBox.BackColor,
+                Threshold = Convert.ToInt32(Threshold_UpDown.Value),
+                NumberOfTriangles = Convert.ToInt32(Triangles_UpDown.Value)
+            };
+
+            Calculator = new CircumscribedCirclesFinder(img, settings);
 
             var l = Calculator.FindTriangleContour();
 
@@ -71,13 +89,13 @@ namespace GUI
                     Text = el.Index.ToString(),
                     AutoSize = true,
                     Visible = true,
-                    ForeColor = Color.FromArgb(255 - ChoosenColor_PictureBox.BackColor.R, 255 - ChoosenColor_PictureBox.BackColor.G, 255 - ChoosenColor_PictureBox.BackColor.B),
+                    ForeColor = ChoosenColor_PictureBox.BackColor.InvertColor(),
                     BackColor = Color.Transparent
                 };
 
                 Image_PictureBox.Controls.Add(label);
             }
-            Image_PictureBox.Image = img.ToBitmap();
+            return img.ToBitmap();
         }
 
         private void Threshold_UpDown_ValueChanged(object sender, EventArgs e)
@@ -110,8 +128,9 @@ namespace GUI
                 {
                     foreach (var el in Image_PictureBox.Controls)
                     {
-                        var label = ((Label)el);
-                        g.DrawString(label.Text, DefaultFont, new SolidBrush(label.ForeColor), PointScaler.ScaleToSource(Image_PictureBox.Size, label.Location));
+                        var label = (Label)el;
+                        g.DrawString(label.Text, DefaultFont, new SolidBrush(label.ForeColor),
+                            PointScaler.ScaleToSource(Image_PictureBox.Size, label.Location));
                     }
                 }
 

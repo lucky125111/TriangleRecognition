@@ -69,8 +69,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Calculator.cs" />
-    <Compile Include="PolygonSize.cs" />
+    <Compile Include="CalculatorSettings.cs" />
+    <Compile Include="CircumscribedCirclesFinder.cs" />
+    <Compile Include="ColorExtensionMethods.cs" />
+    <Compile Include="PolygonCountour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultCircles.cs" />
     <Compile Include="TriangleProcessor.cs" />
